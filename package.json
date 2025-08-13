@@ -20,6 +20,10 @@
     "mac": {
       "icon": "assets/icons/mac/icon.icns",
       "target": ["dmg"]
+    },
+    "win": {
+      "icon": "assets/icons/win/icon.ico",
+      "target": "nsis"
     }
   },
   "author": "",

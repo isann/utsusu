@@ -17,9 +17,9 @@ process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = '1';
 
 // 全てのウィンドウが閉じたら終了
 app.on('window-all-closed', function () {
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
+    // if (process.platform !== 'darwin') {
+    //     app.quit();
+    // }
 });
 
 function openCaptureWindow(){
