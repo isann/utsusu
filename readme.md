@@ -1,14 +1,16 @@
 # kiritoru
-I create a "kiritoru" because "kiritori" app stopped working after updating to Sierra.
-It's an application that takes a screenshot of the desktop and displays it in the foreground.
-![alt](https://raw.githubusercontent.com/isann/images/master/kiritoru_demo.gif "title")
+クリップボードにある画像データをウィンドウ上に表示するアプリケーションです。
+もともとスクリーンショットをそのままキャプチャするアプリケーションでしたが、権限周りがきびしくなったためクリップボードのデータをコピーする方式にしました。
 
 # Usage
-The main window is completely transparent.
-Press "Command + L" to display the pointer.
-Click on the upper left point on the screen where you want to take a screenshot.
-Move the mouse to the lower right corner and select the area where you want to take a screenshot.
-Click the mouse to bring the captured screen to the forefront.
-Multiple captures are possible.
+Mac などでスクリーンショットをクリップボードに保存します。
+これは Mac の標準機能にあり次のようにできます。
 
-Click on the displayed capture screen to make it active, and press Enter to make the capture screen disappear.
+- 画面全体をクリップボードに保存
+    - Control + Shift + Command + 3
+- 選択範囲をクリップボードに保存
+  - Control + Shift + Command + 4
+- ウィンドウをクリップボードに保存
+  - Control + Shift + Command + 4 を押した後、スペースバーを押してウィンドウを選択
+
+このあと、 Command + L を押すとクリップボードの画像がウィンドウとして表示されます。
