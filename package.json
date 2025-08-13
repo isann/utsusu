@@ -7,6 +7,7 @@
     "start": "electron .",
     "build-mac": "npx electron-builder --mac --universal --dir",
     "build-win": "npx electron-builder --win --x64 --dir",
+    "gen-icon": "./node_modules/.bin/electron-icon-builder --input=/path/to/icon.png --output=./assets",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "build": {
@@ -15,12 +16,17 @@
     "files": [
       "assets/**/*",
       "main.js"
-    ]
+    ],
+    "mac": {
+      "icon": "assets/icons/mac/icon.icns",
+      "target": ["dmg"]
+    }
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "electron": "^37.2.6",
-    "electron-builder": "^26.0.12"
+    "electron-builder": "^26.0.12",
+    "electron-icon-builder": "^2.0.1"
   }
 }
