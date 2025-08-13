@@ -15,7 +15,7 @@ let captureWindow = null;
 
 // システムトレイアイコンの追加
 const path = require('path');
-const { Tray, nativeImage } = require('electron');
+const { Tray, nativeImage, Menu } = require('electron');
 
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = '1';
 
@@ -104,6 +104,12 @@ app.on('ready', function () {
     const icon = nativeImage.createFromPath(iconPath);
     const tray = new Tray(icon);
     tray.setToolTip('kiritoru2');
+    // コンテキストメニューを設定（推奨）
+    const contextMenu = Menu.buildFromTemplate([
+        // { label: 'Show App', click: () => { /* ウィンドウ表示 */ } },
+        { label: 'Quit', click: () => app.quit() }
+    ]);
+    tray.setContextMenu(contextMenu);
 });
 
 // clipboardの読み書き機能をIPCで公開

@@ -24,7 +24,14 @@
     "win": {
       "icon": "assets/icons/win/icon.ico",
       "target": "nsis"
-    }
+    },
+    "extraResources": [
+      {
+        "from": "assets/icons/",
+        "to": "assets/icons",
+        "filter": ["**/*"]
+      }
+    ]
   },
   "author": "",
   "license": "ISC",
