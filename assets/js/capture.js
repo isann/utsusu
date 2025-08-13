@@ -1,89 +1,59 @@
 'use strict';
 
-const size = window.screen;
+function render() {
+    if (window.elClipboard) {
+        ipcRenderer.send('console', 'window.elClipboard');
+    }
 
-function getParameterByName(name, url) {
-  if (!url) {
-    url = window.location.href;
-  }
-  name = name.replace(/[\[\]]/g, "\\$&");
-  let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-    results = regex.exec(url);
-  if (!results) return null;
-  if (!results[2]) return '';
-  return decodeURIComponent(results[2].replace(/\+/g, " "));
-}
-
-function capture(currentDisplayID) {
-  let baseX = getParameterByName('baseX');
-  let baseY = getParameterByName('baseY');
-  let movedX = getParameterByName('movedX');
-  let movedY = getParameterByName('movedY');
-  let video = document.getElementById('video');
-
-  desktopCapturer.getSources({types: ['window', 'screen']})
-    .then((sources) => {
-      for (let i = 0; i < sources.length; ++i) {
-        if (sources[i].display_id === currentDisplayID) {
-          navigator.webkitGetUserMedia({
-            audio: false,
-            video: {
-              mandatory: {
-                chromeMediaSource  : 'desktop',
-                chromeMediaSourceId: sources[i].id,
-                minWidth           : 800,
-                maxWidth           : size.width,
-                minHeight          : 600,
-                maxHeight          : size.height
-              }
+    window.elClipboard.readImage().then(image => {
+        // 画像が存在するかチェック
+        if (!image.isEmpty()) {
+            try {
+                const size = image.getSize();
+                // ipcRenderer.send('console', `幅: ${size.width}px, 高さ: ${size.height}px`);
+                // toPNG()の代わりにtoDataURL()を使用
+                const dataURL = image.toDataURL();
+                const img = document.createElement('img');
+                img.src = dataURL; // 直接dataURLを使用
+                document.body.appendChild(img);
+            } catch (error) {
+                ipcRenderer.send('console', `エラー: ${error.message}`);
             }
-          }, (stream) => {
-            video.srcObject = stream;
-            video.play();
-            // TODO: timeout で実行しないとキャプチャした画像が白色になってしまう、原因不明
-            setTimeout(function () {
-              drawImage(video, baseX, baseY, movedX, movedY);
-            }, 100);
-          }, (error) => {
-            console.error(error);
-          });
-          return
         }
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-      // ipcRenderer.send('console', err.message);
     });
 }
 
-ipcRenderer.on('getCurrentScreenId', (ev, message) => {
-  let currentDisplayID = String(message);
-  capture(currentDisplayID)
+document.addEventListener('DOMContentLoaded', async () => {
+    ipcRenderer.send('console', 'window.elClipboard:');
+    ipcRenderer.send('console', 'window.elClipboard:', window.elClipboard);
+
+    if (window.elClipboard) {
+        // クリップボードにテキストを書き込み
+        await window.elClipboard.writeText('Hello World');
+
+        // クリップボードからテキストを読み取り
+        const text = await window.elClipboard.readText();
+        console.log('クリップボードのテキスト:', text);
+
+        // クリップボードから画像を読み取り
+        const imageData = await window.elClipboard.readImage();
+        if (imageData) {
+            console.log('画像データ:', imageData);
+        }
+    } else {
+        ipcRenderer.send('console', 'elClipboard API is not available');
+    }
 });
 
 window.addEventListener('load', function () {
-
-  // Get current display id from main process.
-  ipcRenderer.send('getCurrentScreenId', {});
-
-  window.addEventListener('keydown', function (e) {
-    let keyCode = e.keyCode;
-    switch (keyCode) {
-      case 13:
-        // Enter key press
-        window.close();
-        break;
-    }
-  });
+    window.addEventListener('keydown', function (e) {
+        let keyCode = e.keyCode;
+        switch (keyCode) {
+            case 13:
+                // Enter key press
+                window.close();
+                break;
+        }
+    });
+    render();
 });
-
-function drawImage(video, baseX, baseY, movedX, movedY) {
-  let canvas = document.getElementById('capture');
-  canvas.width = movedX;
-  canvas.height = movedY;
-  let context = canvas.getContext('2d');
-  // TODO: Mac でおそらくメニューバーの高さ分？下にずらさないと位置がおかしいので、baseY + 20px としている
-  // TODO: DesktopCapture の video 表示するとわかるが、その時点でオリジナルのカラーと異なって見えるのが原因不明
-  context.drawImage(video, Number(baseX), Number(baseY) + 20, Number(movedX), Number(movedY), 0, 0, Number(movedX), Number(movedY));
-}
