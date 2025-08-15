@@ -1,6 +1,6 @@
 {
-  "name": "kiritoru",
-  "version": "1.2.2",
+  "name": "utsusu",
+  "version": "1.0.0",
   "description": "Screen capture",
   "main": "main.js",
   "scripts": {
@@ -11,8 +11,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "build": {
-    "appId": "xyz.zono.kiritoru2",
-    "productName": "kiritoru",
+    "appId": "xyz.zono.utsusu",
+    "productName": "utsusu",
     "files": [
       "assets/**/*",
       "main.js"
