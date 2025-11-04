@@ -125,6 +125,22 @@ ipcMain.handle('clipboard:readImage', () => {
     return clipboard.readImage();
 });
 
+// 現在のウィンドウサイズを倍率で変更する
+ipcMain.on('window:scale', (ev, factor) => {
+    try {
+        const win = BrowserWindow.fromWebContents(ev.sender);
+        if (!win || typeof factor !== 'number' || !isFinite(factor) || factor <= 0) {
+            return;
+        }
+        const [w, h] = win.getSize();
+        let newW = Math.max(100, Math.round(w * factor));
+        let newH = Math.max(100, Math.round(h * factor));
+        win.setSize(newW, newH);
+    } catch (e) {
+        console.error('window:scale error', e);
+    }
+});
+
 /**
  * Debug ipc receiver.
  */

@@ -7,9 +7,19 @@ html, body, .window {
   overflow: hidden;
   margin: 0;
   padding: 0;
+  background-color: dimgray;
 }
 
 body {
   -webkit-app-region: drag; /* ドラッグ可能に */
   -webkit-user-select: none; /* ドラッグはテキスト選択と競合するので禁止 */
+}
+
+img.__utsusu_clip_img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  user-select: none;
+  pointer-events: none;
 }
